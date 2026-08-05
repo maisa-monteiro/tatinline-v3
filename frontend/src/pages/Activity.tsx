@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Scale, Ruler, TrendingUp, Activity as ActivityIcon, FileText } from 'lucide-react';
 import { ActivityReportModal } from '../components/ActivityReportModal';
-import { api } from '../api'; // <-- Importar a API
+import { api } from '../api';
 import './Activity.css';
 
 interface WeightLog {
@@ -12,6 +12,14 @@ interface WeightLog {
 interface WaistLog {
   date: string;
   waist: number;
+}
+
+interface DiaryResponseItem {
+  id?: number;
+  kind?: string;
+  description?: string;
+  calories?: number;
+  timestamp?: string;
 }
 
 interface ActivityProps {
@@ -36,11 +44,58 @@ export function Activity({ idealWeight = 65, onSaveWorkout }: ActivityProps) {
 
   const estimatedKcal = calculateKcal();
 
+  // Estados de Peso e Cintura
+  const [weightInput, setWeightInput] = useState('');
+  const [weightLogs, setWeightLogs] = useState<WeightLog[]>([
+    { date: '01/08', weight: 68.5 },
+    { date: '03/08', weight: 67.8 },
+    { date: '05/08', weight: 67.3 },
+  ]);
+
+  const [waistInput, setWaistInput] = useState('');
+  const [waistLogs, setWaistLogs] = useState<WaistLog[]>([
+    { date: '01/08', waist: 82 },
+    { date: '03/08', waist: 81.5 },
+    { date: '05/08', waist: 80.5 },
+  ]);
+
+  // Carregar dados históricos do backend usando a rota correta do teu api.ts (/diary/user/1)
+  useEffect(() => {
+    async function loadLogs() {
+      try {
+        const response = await api.get('/diary/user/1');
+        if (Array.isArray(response.data)) {
+          const fetchedWeight: WeightLog[] = response.data
+            .filter((item: DiaryResponseItem) => item.kind === 'weight')
+            .map((item: DiaryResponseItem) => ({
+              date: new Date(item.timestamp || Date.now()).toLocaleDateString('pt-PT', { day: '2-digit', month: '2-digit' }),
+              weight: parseFloat(item.description?.replace(/[^0-9.]/g, '') || '0'),
+            }))
+            .filter((item:any) => item.weight > 0);
+
+          const fetchedWaist: WaistLog[] = response.data
+            .filter((item: DiaryResponseItem) => item.kind === 'waist')
+            .map((item: DiaryResponseItem) => ({
+              date: new Date(item.timestamp || Date.now()).toLocaleDateString('pt-PT', { day: '2-digit', month: '2-digit' }),
+              waist: parseFloat(item.description?.replace(/[^0-9.]/g, '') || '0'),
+            }))
+            .filter((item: any) => item.waist > 0);
+
+          if (fetchedWeight.length > 0) setWeightLogs(fetchedWeight);
+          if (fetchedWaist.length > 0) setWaistLogs(fetchedWaist);
+        }
+      } catch (error) {
+        console.warn('Backend indisponível no momento, a usar dados locais.');
+      }
+    }
+
+    loadLogs();
+  }, []);
+
   // --- GUARDAR TREINO NO BACKEND ---
   const handleSaveWorkout = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // Guarda o treino na tabela de diário do backend
       await api.post('/diary', {
         user_id: 1,
         kind: 'workout',
@@ -57,21 +112,6 @@ export function Activity({ idealWeight = 65, onSaveWorkout }: ActivityProps) {
       alert('Erro ao guardar o treino no servidor.');
     }
   };
-
-  // Estados de Peso e Cintura
-  const [weightInput, setWeightInput] = useState('');
-  const [weightLogs, setWeightLogs] = useState<WeightLog[]>([
-    { date: '01/08', weight: 68.5 },
-    { date: '03/08', weight: 67.8 },
-    { date: '05/08', weight: 67.3 },
-  ]);
-
-  const [waistInput, setWaistInput] = useState('');
-  const [waistLogs, setWaistLogs] = useState<WaistLog[]>([
-    { date: '01/08', waist: 82 },
-    { date: '03/08', waist: 81.5 },
-    { date: '05/08', waist: 80.5 },
-  ]);
 
   // --- GUARDAR PESO NO BACKEND ---
   const handleSaveWeight = async (e: React.FormEvent) => {

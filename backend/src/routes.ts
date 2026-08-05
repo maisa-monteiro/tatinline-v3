@@ -87,8 +87,6 @@ router.post('/diary', async (req: any, res: any) => {
   try {
     let { user_id, kind, description, calories, water_ml, timestamp } = req.body;
     
-    // --> ESTA É A PARTE NOVA <--
-    // Se for comida (kind === 'food') e não houver calorias passadas, chamamos a IA para adivinhar!
     if (kind === 'food' && description && (!calories || calories === 0)) {
       calories = await estimateCalories(description);
     }
@@ -102,6 +100,20 @@ router.post('/diary', async (req: any, res: any) => {
     );
 
     res.status(201).json(result.rows[0]);
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// --> ROTA ADICIONADA: Busca histórico do Diário do utilizador <--
+router.get('/diary/user/:userId', async (req: any, res: any) => {
+  try {
+    const { userId } = req.params;
+    const result = await pool.query(
+      'SELECT * FROM diary_entries WHERE user_id = $1 ORDER BY timestamp DESC',
+      [userId]
+    );
+    res.json(result.rows);
   } catch (err: any) {
     res.status(500).json({ error: err.message });
   }

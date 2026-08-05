@@ -3,13 +3,16 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: 70px;
+  max-width: 480px; /* Alinha com a largura máxima do #root no index.css */
+  margin: 0 auto; /* Centra no monitor quando visto em desktop */
+  height: calc(70px + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
   background-color: #ffffff;
   display: flex;
   justify-content: space-around;
   align-items: center;
   border-top: 1px solid #eef2f6;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.04);
   z-index: 100;
 }
 
@@ -22,7 +25,7 @@
   color: #64748b;
   font-size: 0.75rem;
   font-weight: 500;
-  padding: 6px 16px;
+  padding: 8px 16px;
   border-radius: 20px;
   transition: all 0.2s ease;
 }

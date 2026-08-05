@@ -1,3 +1,18 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(15, 23, 42, 0.65);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  padding: 16px;
+  backdrop-filter: blur(6px);
+}
+
 .report-modal-card {
   background-color: #ffffff;
   width: 100%;
@@ -36,6 +51,7 @@
   justify-content: center;
   color: #64748b;
   cursor: pointer;
+  transition: background-color 0.2s;
 }
 
 .btn-close-modal:hover {
@@ -116,6 +132,15 @@
   padding-right: 4px;
 }
 
+/* Scrollbar estilizada */
+.report-content-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+.report-content-scroll::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 4px;
+}
+
 .report-section-title {
   font-size: 0.75rem;
   font-weight: 700;
@@ -123,6 +148,9 @@
   letter-spacing: 0.05em;
   margin-top: 8px;
   margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .report-stats-grid {

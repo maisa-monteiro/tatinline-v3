@@ -13,7 +13,7 @@ app.use(express.json());
 app.use('/api', router);
 
 app.get('/api/health', (req: any, res: any) => {
-  res.json({ status: 'ok', message: 'Servidor tatinline-v2 a rodar!' });
+  res.json({ status: 'ok', message: 'Servidor tatinline-v3 a rodar!' });
 });
 
 app.get('/api/test-db', async (req: any, res: any) => {

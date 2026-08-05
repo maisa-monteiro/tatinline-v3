@@ -32,7 +32,7 @@ export function OnboardingModal({ isOpen, onComplete }: OnboardingModalProps) {
   return (
     <div className="onboarding-overlay">
       <div className="onboarding-card">
-        <h2> Bem-vinda!</h2>
+        <h2>👋 Bem-vinda!</h2>
         <p className="onboarding-sub">Configura o teu perfil e as tuas metas iniciais.</p>
 
         <form onSubmit={handleSubmit} className="onboarding-form">
@@ -75,6 +75,7 @@ export function OnboardingModal({ isOpen, onComplete }: OnboardingModalProps) {
               <label>Sono (horas)</label>
               <input
                 type="number"
+                step="0.5"
                 className="input-field"
                 value={sleep}
                 onChange={(e) => setSleep(e.target.value)}
@@ -85,6 +86,7 @@ export function OnboardingModal({ isOpen, onComplete }: OnboardingModalProps) {
               <label>Peso ideal (kg)</label>
               <input
                 type="number"
+                step="0.1"
                 className="input-field"
                 value={idealWeight}
                 onChange={(e) => setIdealWeight(e.target.value)}
@@ -93,8 +95,8 @@ export function OnboardingModal({ isOpen, onComplete }: OnboardingModalProps) {
             </div>
           </div>
 
-          <button type="submit" className="btn-save" style={{ marginTop: '12px' }}>
-            Guardar e Começar 
+          <button type="submit" className="onboarding-submit-btn">
+            Guardar e Começar
           </button>
         </form>
       </div>

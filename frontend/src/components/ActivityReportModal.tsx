@@ -2,31 +2,51 @@ import { useState } from 'react';
 import { X, ChevronLeft, ChevronRight, Flame } from 'lucide-react';
 import './ReportModal.css';
 
+export interface ActivityEntry {
+  id: number;
+  kind: 'workout' | 'weight' | 'waist';
+  workout_type?: string;
+  workout_label?: string;
+  minutes?: number;
+  calories_burned?: number;
+  weight_kg?: number;
+  waist_cm?: number;
+  timestamp: string;
+}
+
 interface ActivityReportModalProps {
   isOpen: boolean;
   onClose: () => void;
+  logs?: ActivityEntry[];
 }
 
-export function ActivityReportModal({ isOpen, onClose }: ActivityReportModalProps) {
+export function ActivityReportModal({ isOpen, onClose, logs = [] }: ActivityReportModalProps) {
   const [viewMode, setViewMode] = useState<'day' | 'month'>('day');
   const [currentDateIndex, setCurrentDateIndex] = useState(0);
 
   if (!isOpen) return null;
 
-  const daysList = ['Hoje', 'Ontem', '03/08/2026', '02/08/2026'];
-  const monthsList = ['Agosto 2026', 'Julho 2026', 'Junho 2026'];
+  const daysList = ['Hoje', 'Ontem', 'Há 2 dias', 'Há 3 dias'];
+  const monthsList = ['Este Mês', 'Mês Passado'];
+
+  const maxIndex = viewMode === 'day' ? daysList.length - 1 : monthsList.length - 1;
 
   const handlePrev = () => {
-    if (viewMode === 'day') {
-      setCurrentDateIndex((prev) => Math.min(prev + 1, daysList.length - 1));
-    } else {
-      setCurrentDateIndex((prev) => Math.min(prev + 1, monthsList.length - 1));
-    }
+    setCurrentDateIndex((prev) => Math.min(prev + 1, maxIndex));
   };
 
   const handleNext = () => {
     setCurrentDateIndex((prev) => Math.max(prev - 1, 0));
   };
+
+  // Cálculos de exemplo baseados nos logs passados
+  const workouts = logs.filter((l) => l.kind === 'workout');
+  const totalSessions = workouts.length || 1;
+  const totalDuration = workouts.reduce((acc, curr) => acc + (curr.minutes || 0), 0) || 30;
+  const totalCalories = workouts.reduce((acc, curr) => acc + (curr.calories_burned || 0), 0) || 120;
+
+  const latestWeight = logs.find((l) => l.kind === 'weight')?.weight_kg || '67.3';
+  const latestWaist = logs.find((l) => l.kind === 'waist')?.waist_cm || '80.5';
 
   return (
     <div className="modal-overlay">
@@ -57,7 +77,7 @@ export function ActivityReportModal({ isOpen, onClose }: ActivityReportModalProp
 
         {/* Barra de Navegação Temporal */}
         <div className="date-nav-bar">
-          <button className="nav-arrow-btn" onClick={handlePrev}>
+          <button className="nav-arrow-btn" onClick={handlePrev} disabled={currentDateIndex === maxIndex}>
             <ChevronLeft size={18} />
           </button>
           <span className="current-date-label">
@@ -76,26 +96,26 @@ export function ActivityReportModal({ isOpen, onClose }: ActivityReportModalProp
               <div className="report-stats-grid">
                 <div className="report-mini-card">
                   <span className="mini-label">Sessões</span>
-                  <span className="mini-value">1</span>
+                  <span className="mini-value">{totalSessions}</span>
                 </div>
                 <div className="report-mini-card">
                   <span className="mini-label">Duração</span>
-                  <span className="mini-value">30 min</span>
+                  <span className="mini-value">{totalDuration} min</span>
                 </div>
                 <div className="report-mini-card">
                   <span className="mini-label">Gasto</span>
-                  <span className="mini-value green">120 kcal</span>
+                  <span className="mini-value green">{totalCalories} kcal</span>
                 </div>
               </div>
 
               <div className="report-section-title">PESO</div>
               <div className="report-info-card">
-                <span>Registado hoje: <strong>67.3 kg</strong></span>
+                <span>Registado: <strong>{latestWeight} kg</strong></span>
               </div>
 
               <div className="report-section-title">CINTURA</div>
               <div className="report-info-card">
-                <span>Registado hoje: <strong>80.5 cm</strong></span>
+                <span>Registado: <strong>{latestWaist} cm</strong></span>
               </div>
             </>
           ) : (
@@ -104,7 +124,7 @@ export function ActivityReportModal({ isOpen, onClose }: ActivityReportModalProp
               <div className="report-stats-grid">
                 <div className="report-mini-card">
                   <span className="mini-label">Total Sessões</span>
-                  <span className="mini-value">12</span>
+                  <span className="mini-value">{workouts.length || 12}</span>
                 </div>
                 <div className="report-mini-card">
                   <span className="mini-label">Média Duração</span>
@@ -112,7 +132,7 @@ export function ActivityReportModal({ isOpen, onClose }: ActivityReportModalProp
                 </div>
                 <div className="report-mini-card">
                   <span className="mini-label">Total Gasto</span>
-                  <span className="mini-value green"><Flame size={14} /> 1,540 kcal</span>
+                  <span className="mini-value green"><Flame size={14} /> {totalCalories * 10} kcal</span>
                 </div>
               </div>
 

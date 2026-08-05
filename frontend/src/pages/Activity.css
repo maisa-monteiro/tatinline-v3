@@ -14,6 +14,11 @@
   font-weight: 600 !important;
   color: #334155 !important;
   cursor: pointer !important;
+  transition: background-color 0.2s;
+}
+
+.btn-report:hover {
+  background-color: #f8fafc !important;
 }
 
 .icon-badge.green {
@@ -42,6 +47,7 @@
   color: #334155;
   cursor: pointer;
   font-weight: 500;
+  transition: all 0.2s ease;
 }
 
 .pill.active {
@@ -94,6 +100,7 @@
   font-size: 0.9rem;
   color: #64748b;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .tab.active {
@@ -130,6 +137,11 @@
   font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-save:hover {
+  background-color: #005ea2;
 }
 
 .input-row {
@@ -147,6 +159,11 @@
   outline: none;
 }
 
+.input-field:focus {
+  border-color: #0077c8;
+  background-color: #ffffff;
+}
+
 .btn-save-short {
   background-color: #0077c8;
   color: #ffffff;
@@ -155,88 +172,11 @@
   padding: 0 24px;
   font-weight: 700;
   cursor: pointer;
+  transition: background-color 0.2s;
 }
 
-.graph-box {
-  background-color: #f8fafc;
-  border-radius: 16px;
-  padding: 24px;
-  text-align: center;
-  color: #64748b;
-  border: 1px dashed #cbd5e1;
-  margin-top: 16px;
-}
-
-.stats-row {
-  display: flex;
-  gap: 12px;
-}
-
-.stat-box {
-  flex: 1;
-  background-color: #f8fafc;
-  padding: 14px;
-  border-radius: 16px;
-}
-
-.stat-label {
-  font-size: 0.8rem;
-  color: #64748b;
-  display: block;
-}
-
-.stat-value {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #0f172a;
-}
-
-.measure-form {
-  display: flex;
-  gap: 10px;
-  margin-top: 16px;
-  margin-bottom: 16px;
-}
-.chart-box {
-  background-color: #f8fafc;
-  border-radius: 20px;
-  padding: 16px;
-  border: 1px solid #e2e8f0;
-}
-.chart-header-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.chart-title {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #475569;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.target-badge {
-  font-size: 0.75rem;
-  font-weight: 700;
-  background-color: #e0f2fe;
-  color: #0369a1;
-  padding: 4px 10px;
-  border-radius: 12px;
-}
-
-.svg-container {
-  width: 100%;
-  height: 110px;
-}
-
-.evolution-svg {
-  width: 100%;
-  height: 100%;
-  overflow: visible;
+.btn-save-short:hover {
+  background-color: #005ea2;
 }
 
 .stats-row {
@@ -272,4 +212,54 @@
 
 .stat-value.negative {
   color: #ef4444;
+}
+
+.measure-form {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.chart-box {
+  background-color: #f8fafc;
+  border-radius: 20px;
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+}
+
+.chart-header-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.chart-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.target-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  background-color: #e0f2fe;
+  color: #0369a1;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+.svg-container {
+  width: 100%;
+  height: 110px;
+}
+
+.evolution-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
 }

@@ -50,6 +50,5 @@ CREATE TABLE IF NOT EXISTS activity_entries (
 
 -- Insere o utilizador inicial de forma segura
 INSERT INTO users (id, name, calories_goal, water_ml_goal) 
-VALUES (1, 'Meu Perfil', 2000, 2000)
-ON CONFLICT (id) DO NOTHING;
-
+SELECT 1, 'Meu Perfil', 2000, 2000
+WHERE NOT EXISTS (SELECT 1 FROM users WHERE id = 1);
