@@ -1,0 +1,268 @@
+/* Cabeçalho e Cartão de Calorias */
+.header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.btn-report {
+  background-color: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 20px !important;
+  padding: 8px 16px !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  color: #334155 !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.card-header-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.card-label {
+  font-size: 0.9rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.workout-kcal-tag {
+  color: #16a34a;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.kcal-main-display {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.kcal-consumed {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.kcal-goal {
+  font-size: 1.1rem;
+  color: #64748b;
+}
+
+.progress-bar-bg {
+  width: 100%;
+  height: 10px;
+  background-color: #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: #0077c8;
+  border-radius: 10px;
+  transition: width 0.3s ease;
+}
+
+.kcal-remaining {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #16a34a;
+}
+
+/* Caixa de Texto do Registar Refeição */
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.icon-badge.sparkles {
+  background-color: #006699;
+  color: #ffffff;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-header h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.card-sub {
+  font-size: 0.825rem;
+  color: #64748b;
+}
+
+.meal-input {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 18px !important;
+  padding: 14px 16px !important;
+  font-size: 0.95rem !important;
+  font-family: inherit !important;
+  resize: none !important;
+  background-color: #f8fafc !important;
+  outline: none !important;
+  margin-bottom: 16px !important;
+  display: block !important;
+}
+
+.meal-input::placeholder {
+  color: #94a3b8;
+}
+
+.btn-primary {
+  width: 100% !important;
+  background-color: #8ec5fc !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 20px !important;
+  padding: 14px !important;
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  display: block !important;
+}
+
+/* Água */
+.water-summary {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.water-capsule {
+  width: 65px;
+  height: 90px;
+  background-color: #e0f2fe;
+  border-radius: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0284c7;
+}
+
+.water-label {
+  font-size: 1rem;
+  color: #475569;
+}
+
+.water-values {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.water-current {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.water-goal {
+  font-size: 1.1rem;
+  color: #64748b;
+}
+
+.water-percentage {
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.water-buttons {
+  display: flex !important;
+  gap: 8px !important;
+}
+
+.btn-quick-add {
+  flex: 1 !important;
+  border: 1px solid #e2e8f0 !important;
+  background-color: #f8fafc !important;
+  border-radius: 18px !important;
+  padding: 12px 0 !important;
+  font-size: 0.9rem !important;
+  color: #1e293b !important;
+  cursor: pointer !important;
+}
+
+.btn-quick-add.primary-icon {
+  background-color: #0077c8 !important;
+  color: #ffffff !important;
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Registos */
+.empty-text {
+  text-align: center;
+  color: #64748b;
+  padding: 12px 0;
+  font-size: 0.9rem;
+}
+
+.logs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.log-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 12px 16px;
+}
+
+.log-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.log-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #1e293b;
+}
+
+.log-detail {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.btn-delete {
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

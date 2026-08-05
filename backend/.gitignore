@@ -1,0 +1,19 @@
+# Dependências do Node.js
+node_modules/
+
+# Variáveis de ambiente e credenciais (MUITO IMPORTANTE)
+.env
+*.env
+.env.local
+
+# Builds, compilações ou arquivos gerados (se usar TypeScript compilado para JS)
+dist/
+build/
+*.tsbuildinfo
+
+# Logs e arquivos de erro
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log

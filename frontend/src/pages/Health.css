@@ -1,0 +1,190 @@
+.card-header-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Banner da Pressão Arterial */
+.bp-alert-banner {
+  border-radius: 20px;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.bp-alert-banner.bp-green {
+  background-color: #dcfce7;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+}
+
+.bp-alert-banner.bp-yellow {
+  background-color: #fef3c7;
+  border: 1px solid #fde68a;
+  color: #92400e;
+}
+
+.bp-alert-banner.bp-red {
+  background-color: #fee2e2;
+  border: 1px solid #fca5a5;
+  color: #991b1b;
+}
+
+.alert-tag {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.bp-value-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.bp-main {
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.bpm-sub {
+  font-size: 1.1rem;
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+.time-tag, .time-sub {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+/* Fix da Grelha de Inputs (Caber 100% dentro do card) */
+.bp-inputs-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.sleep-inputs-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.input-group label {
+  font-size: 0.8rem;
+  color: #64748b;
+  text-align: center;
+  font-weight: 500;
+}
+
+.input-group .input-field {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  text-align: center;
+  padding: 10px 4px !important;
+}
+
+.sleep-header, .trends-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sleep-val {
+  font-size: 0.95rem;
+  color: #475569;
+}
+
+.mood-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.mood-btn {
+  border: 1px solid transparent;
+  border-radius: 20px;
+  padding: 16px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background-color: #f8fafc;
+}
+
+.emoji-icon {
+  font-size: 1.5rem;
+}
+
+.mood-btn.good {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.mood-btn.neutral {
+  background-color: #fef9c3;
+  color: #854d0e;
+}
+
+.mood-btn.bad {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.mood-btn.active {
+  border: 2px solid #0077c8;
+}
+
+.icon-badge.light-green {
+  background-color: #dcfce7;
+  color: #16a34a;
+}
+
+.empty-state-box {
+  background-color: #f1f5f9;
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #64748b;
+  margin-top: 16px;
+  line-height: 1.4;
+}
+/* Lista de registos de sono */
+.sleep-logs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sleep-log-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  color: #334155;
+}

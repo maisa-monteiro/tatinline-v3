@@ -1,0 +1,126 @@
+.settings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.setting-row {
+  background-color: #f1f5f9;
+  border-radius: 20px;
+  padding: 12px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.setting-label {
+  font-size: 0.95rem;
+  color: #334155;
+  font-weight: 500;
+}
+
+.setting-input-wrapper {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 6px 14px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+.setting-input {
+  border: none !important;
+  outline: none !important;
+  font-size: 1.1rem !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  text-align: right !important;
+  width: 65px !important;
+  background: transparent !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+
+.setting-unit {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-left: 6px;
+}
+
+.btn-reset-app {
+  width: 100%;
+  background-color: #fee2e2;
+  color: #dc2626;
+  border: none;
+  border-radius: 20px;
+  padding: 14px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Modal de Confirmação de Reset */
+.confirm-card {
+  background-color: #ffffff;
+  border-radius: 24px;
+  padding: 24px;
+  width: 100%;
+  max-width: 360px;
+  text-align: center;
+}
+
+.warning-icon {
+  color: #dc2626;
+  background-color: #fee2e2;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px auto;
+}
+
+.confirm-card h3 {
+  font-size: 1.2rem;
+  color: #0f172a;
+  margin-bottom: 8px;
+}
+
+.confirm-card p {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-bottom: 20px;
+}
+
+.confirm-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-cancel {
+  flex: 1;
+  border: 1px solid #e2e8f0;
+  background-color: #f8fafc;
+  padding: 12px;
+  border-radius: 16px;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+}
+
+.btn-danger {
+  flex: 1;
+  background-color: #dc2626;
+  color: #ffffff;
+  border: none;
+  padding: 12px;
+  border-radius: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
