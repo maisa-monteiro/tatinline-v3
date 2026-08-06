@@ -1,8 +1,6 @@
-const OpenAI = require('openai');
+const { GoogleGenAI } = require('@google/genai');
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 async function getHealthInsights(healthLogs: any[], diaryLogs: any[], activityLogs: any[]) {
   try {
@@ -13,37 +11,43 @@ async function getHealthInsights(healthLogs: any[], diaryLogs: any[], activityLo
 
     Gera uma análise motivacional curta e perspicaz (máximo 2 parágrafos) em Português de Portugal, focada em tendências, correlações e conselhos práticos.`;
 
-    const response = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: [{ role: 'user', content: prompt }],
-      temperature: 0.7,
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.0-flash',
+      contents: prompt,
     });
 
-    return response.choices[0]?.message?.content || 'Continua a registar os teus dados!';
+    return response.text || 'Continua a registar os teus dados!';
   } catch (error: any) {
-    console.error('Erro na IA:', error.message);
+    console.error('Erro na IA (Google):', error.message);
     return 'Continua a registar os teus dados diariamente para que a IA consiga identificar padrões úteis para a tua saúde.';
   }
 }
 
 async function estimateCalories(description: string): Promise<number> {
   try {
-    const prompt = `Estima de forma realista e baseada na ciência nutricional o número de calorias (apenas o valor numérico inteiro, ex: 150) para a seguinte descrição de refeição: "${description}". Responde APENAS com o número inteiro, sem texto adicional.`;
+    const prompt = `Tu és um nutricionista clínico altamente experiente e especialista em contagem calórica precisa. 
+    Analisa a seguinte descrição de refeição introduzida por um utilizador: "${description}".
 
-    const response = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: [{ role: 'user', content: prompt }],
-      temperature: 0.3,
+    Regras obrigatórias:
+    1. Assume uma porção média/padrão caso o utilizador não especifique o tamanho (ex: "1 maçã" = uma unidade média de cerca de 150g, aproximadamente 80-95 kcal; "um prato de arroz" = porção normal).
+    2. Calcula o valor calórico total estimado de forma realista com base na composição nutricional do alimento.
+    3. Formato de resposta: Devolve APENAS e unicamente o valor numérico inteiro correspondente às calorias totais. Não incluas letras, pontos finais, unidades (como "kcal"), explicações ou texto adicional de espécie alguma (exemplo correto: 95).`;
+
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: prompt,
     });
 
-    const content = response.choices[0]?.message?.content?.trim();
-    console.log(`IA - Refeição: "${description}" | Calorias calculadas:`, content); // <--- Adiciona isto
+    const content = response.text?.trim();
+    console.log(`IA (Google) - Refeição: "${description}" | Calorias calculadas:`, content);
     
-    const calories = parseInt(content || '300', 10);
-    return isNaN(calories) ? 300 : calories;
+    const cleanContent = content ? content.replace(/[^0-9]/g, '') : '';
+    const calories = parseInt(cleanContent, 10);
+
+    return isNaN(calories) ? 100 : calories;
   } catch (error: any) {
-    console.error('ERRO DETALHADO DA IA:', error.response?.data || error.message); // <--- E isto
-    return 300; 
+    console.error('ERRO DETALHADO DA IA (Google):', error.message);
+    return 100; 
   }
 }
 
