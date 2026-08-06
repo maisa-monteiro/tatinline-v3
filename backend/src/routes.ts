@@ -50,8 +50,17 @@ router.put('/user/:id/goals', async (req: any, res: any) => {
 
 router.post('/health', async (req: any, res: any) => {
   try {
-    const { user_id, kind, systolic, diastolic, bpm, sleep_hours, mood_value, stress_value, timestamp } = req.body;
+    // Adicionámos 'bp' por defeito caso o frontend não envie o kind
+    let { user_id, kind, systolic, diastolic, bpm, sleep_hours, mood_value, stress_value, timestamp } = req.body;
     
+    if (!kind) {
+      if (systolic) kind = 'bp';
+      else if (sleep_hours) kind = 'sleep';
+      else if (mood_value) kind = 'mood';
+      else if (stress_value) kind = 'stress';
+      else kind = 'bp';
+    }
+
     const result = await pool.query(
       `INSERT INTO health_entries 
        (user_id, kind, systolic, diastolic, bpm, sleep_hours, mood_value, stress_value, timestamp)
@@ -62,19 +71,7 @@ router.post('/health', async (req: any, res: any) => {
 
     res.status(201).json(result.rows[0]);
   } catch (err: any) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-router.get('/health/user/:userId', async (req: any, res: any) => {
-  try {
-    const { userId } = req.params;
-    const result = await pool.query(
-      'SELECT * FROM health_entries WHERE user_id = $1 ORDER BY timestamp DESC',
-      [userId]
-    );
-    res.json(result.rows);
-  } catch (err: any) {
+    console.error("Erro na rota /health:", err.message);
     res.status(500).json({ error: err.message });
   }
 });

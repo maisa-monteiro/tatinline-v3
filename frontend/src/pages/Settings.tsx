@@ -1,31 +1,64 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Target, RefreshCw, AlertTriangle } from 'lucide-react';
-import { api } from '../api'; // <-- Importar a API
+import { type UserProfile } from '../components/OnboardingModal';
+import { api } from '../api';
 import './Settings.css';
 
 interface SettingsProps {
-  userName?: string;
+  profile?: UserProfile | null;
+  onUpdateProfile?: (profile: UserProfile) => void;
   onResetApp?: () => void;
 }
 
-export function Settings({ userName = 'rg', onResetApp }: SettingsProps) {
-  const [calories, setCalories] = useState('1720');
-  const [water, setWater] = useState('2450');
-  const [sleep, setSleep] = useState('8');
-  const [idealWeight, setIdealWeight] = useState('65');
+export function Settings({ profile, onUpdateProfile, onResetApp }: SettingsProps) {
+  // Inicializamos os inputs com os valores vindos do perfil global
+  const [calories, setCalories] = useState(String(profile?.calories || '2000'));
+  const [water, setWater] = useState(String(profile?.water || '2500'));
+  const [sleep, setSleep] = useState(String(profile?.sleep || '8'));
+  const [idealWeight, setIdealWeight] = useState(String(profile?.idealWeight || '65'));
 
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const userName = profile?.name || 'Utilizador';
 
-  // --- GUARDAR METAS NO BACKEND ---
+  // Se o perfil mudar externamente, atualiza os inputs
+  useEffect(() => {
+    if (profile) {
+      if (profile.calories) setCalories(String(profile.calories));
+      if (profile.water) setWater(String(profile.water));
+      if (profile.sleep) setSleep(String(profile.sleep));
+      if (profile.idealWeight) setIdealWeight(String(profile.idealWeight));
+    }
+  }, [profile]);
+
+  // --- GUARDAR METAS NO BACKEND E NO ESTADO GLOBAL ---
   const handleSaveSettings = async () => {
     try {
+      const newCal = Number(calories);
+      const newWater = Number(water);
+      const newSleep = Number(sleep);
+      const newWeight = Number(idealWeight);
+
+      // 1. Atualizar no backend
       await api.put('/user/1/goals', {
-        calorie_goal: Number(calories),
-        water_goal: Number(water),
-        sleep_goal: Number(sleep),
-        ideal_weight: Number(idealWeight),
+        calorie_goal: newCal,
+        water_goal: newWater,
+        sleep_goal: newSleep,
+        ideal_weight: newWeight,
       });
-      alert('Metas guardadas com sucesso no servidor!');
+
+      // 2. Atualizar imediatamente o estado global da aplicação
+      if (profile && onUpdateProfile) {
+        const updatedProfile: UserProfile = {
+          ...profile,
+          calories: newCal,
+          water: newWater,
+          sleep: newSleep,
+          idealWeight: newWeight,
+        };
+        onUpdateProfile(updatedProfile);
+      }
+
+      alert('Metas guardadas e atualizadas com sucesso em toda a app!');
     } catch (error) {
       console.error('Erro ao guardar metas:', error);
       alert('Erro ao guardar as metas no servidor.');

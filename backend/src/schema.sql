@@ -13,13 +13,13 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS health_entries (
   id SERIAL PRIMARY KEY,
   user_id INT REFERENCES users(id) ON DELETE CASCADE DEFAULT 1,
-  kind VARCHAR(20) NOT NULL, -- 'bp', 'sleep', 'mood', 'stress'
+  kind VARCHAR(50) NOT NULL, -- 'bp', 'sleep', 'mood', 'stress'
   systolic INT,
   diastolic INT,
   bpm INT,
-  sleep_hours NUMERIC(4,2),
-  mood_value VARCHAR(20),
-  stress_value VARCHAR(20),
+  sleep_hours DECIMAL(4,2),
+  mood_value VARCHAR(50),
+  stress_value VARCHAR(50),
   timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Heart, Moon, Smile, Brain, TrendingUp, Trash2 } from 'lucide-react';
 import { HealthReportModal } from '../components/HealthReportModal';
-import { api } from '../api'; // <-- Importar a API que criámos
+import { type UserProfile } from '../components/OnboardingModal';
+import { api } from '../api';
 import './Health.css';
 
 interface SleepLog {
@@ -11,8 +12,16 @@ interface SleepLog {
   durationMinutes: number;
 }
 
-export function Health() {
+interface HealthProps {
+  profile?: UserProfile | null;
+}
+
+export function Health({ profile }: HealthProps) {
   const [isReportOpen, setIsReportOpen] = useState(false);
+  const userName = profile?.name || 'Utilizador';
+
+  // --- ESTADO PARA OS LOGS VINDOS DA BASE DE DADOS ---
+  const [healthLogs, setHealthLogs] = useState<any[]>([]);
 
   // Pressão Arterial e BPM
   const [systolic, setSystolic] = useState('120');
@@ -30,6 +39,20 @@ export function Health() {
   
   const [stress, setStress] = useState('Baixo');
   const [lastStressTime, setLastStressTime] = useState('17:09');
+
+  // --- FUNÇÃO PARA BUSCAR O HISTÓRICO DA BASE DE DADOS ---
+  const fetchHealthLogs = async () => {
+    try {
+      const response = await api.get('/health/user/1'); // ID 1 do utilizador
+      setHealthLogs(response.data);
+    } catch (error) {
+      console.error('Erro ao carregar histórico de saúde:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchHealthLogs();
+  }, []);
 
   const getBPStatus = () => {
     const sys = Number(systolic);
@@ -64,11 +87,13 @@ export function Health() {
     try {
       await api.post('/health', {
         user_id: 1,
+        kind: 'bp',
         systolic: Number(systolic),
         diastolic: Number(diastolic),
         bpm: Number(bpm),
       });
       alert('Pressão arterial registada com sucesso!');
+      fetchHealthLogs(); // Atualiza a lista para o relatório
     } catch (error) {
       console.error('Erro ao guardar pressão arterial:', error);
       alert('Erro ao comunicar com o servidor.');
@@ -80,14 +105,13 @@ export function Health() {
     const minutes = calculateIntervalMinutes(bedTime, wakeTime);
     if (minutes <= 0) return;
 
+    const totalHours = Number((minutes / 60).toFixed(1));
+
     try {
-      // Exemplo de envio para a tabela de diário ou endpoint de sono
-      await api.post('/diary', {
+      await api.post('/health', {
         user_id: 1,
         kind: 'sleep',
-        description: `Deitou-se às ${bedTime} e acordou às ${wakeTime}`,
-        water_ml: 0,
-        calories: 0
+        sleep_hours: totalHours,
       });
 
       const newLog: SleepLog = {
@@ -98,6 +122,7 @@ export function Health() {
       };
 
       setSleepLogs([...sleepLogs, newLog]);
+      fetchHealthLogs(); // Atualiza a lista para o relatório
     } catch (error) {
       console.error('Erro ao guardar sono:', error);
     }
@@ -123,11 +148,12 @@ export function Health() {
     setLastMoodTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
     
     try {
-      await api.post('/diary', {
+      await api.post('/health', {
         user_id: 1,
         kind: 'mood',
-        description: `Humor: ${selectedMood}`,
+        mood_value: selectedMood,
       });
+      fetchHealthLogs(); // Atualiza a lista para o relatório
     } catch (error) {
       console.error('Erro ao guardar humor:', error);
     }
@@ -139,11 +165,12 @@ export function Health() {
     setLastStressTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
 
     try {
-      await api.post('/diary', {
+      await api.post('/health', {
         user_id: 1,
         kind: 'stress',
-        description: `Stress: ${selectedStress}`,
+        stress_value: selectedStress,
       });
+      fetchHealthLogs(); // Atualiza a lista para o relatório
     } catch (error) {
       console.error('Erro ao guardar stress:', error);
     }
@@ -156,7 +183,7 @@ export function Health() {
       <div className="header-flex">
         <div>
           <h1 className="page-title">Saúde</h1>
-          <p className="page-subtitle">Sinais do teu corpo e mente</p>
+          <p className="page-subtitle">Sinais do teu corpo e mente, {userName}</p>
         </div>
         <button className="btn-report" onClick={() => setIsReportOpen(true)}>
           📄 Relatório
@@ -213,7 +240,6 @@ export function Health() {
           </div>
         </div>
 
-        {/* Botão ligado à função handleSaveBP */}
         <button className="btn-save" onClick={handleSaveBP}>Registar</button>
       </div>
 
@@ -354,7 +380,12 @@ export function Health() {
         </div>
       </div>
 
-      <HealthReportModal isOpen={isReportOpen} onClose={() => setIsReportOpen(false)} />
+      {/* Passamos o estado real 'healthLogs' vindo do backend para o modal de relatório */}
+      <HealthReportModal 
+        isOpen={isReportOpen} 
+        onClose={() => setIsReportOpen(false)} 
+        logs={healthLogs} 
+      />
     </div>
   );
 }

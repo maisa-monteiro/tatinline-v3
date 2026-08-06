@@ -34,7 +34,7 @@ async function estimateCalories(description: string): Promise<number> {
     3. Formato de resposta: Devolve APENAS e unicamente o valor numérico inteiro correspondente às calorias totais. Não incluas letras, pontos finais, unidades (como "kcal"), explicações ou texto adicional de espécie alguma (exemplo correto: 95).`;
 
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-2.0-flash',
       contents: prompt,
     });
 

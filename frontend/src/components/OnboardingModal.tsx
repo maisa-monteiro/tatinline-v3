@@ -3,10 +3,11 @@ import './OnboardingModal.css';
 
 export interface UserProfile {
   name: string;
-  calories: string;
-  water: string;
-  sleep: string;
-  idealWeight: string;
+  calories: string | number;
+  water: string | number;
+  sleep: string | number;
+  idealWeight: string | number;
+  burnedKcal?: number;
 }
 
 interface OnboardingModalProps {

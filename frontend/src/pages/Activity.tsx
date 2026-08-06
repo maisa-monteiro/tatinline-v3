@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Scale, Ruler, TrendingUp, Activity as ActivityIcon, FileText } from 'lucide-react';
 import { ActivityReportModal } from '../components/ActivityReportModal';
+import { type UserProfile } from '../components/OnboardingModal';
 import { api } from '../api';
 import './Activity.css';
 
@@ -23,12 +24,15 @@ interface DiaryResponseItem {
 }
 
 interface ActivityProps {
-  idealWeight?: number;
-  onSaveWorkout?: (kcal: number) => void;
+  profile?: UserProfile | null;
+  onUpdateProfile?: (profile: UserProfile) => void;
 }
 
-export function Activity({ idealWeight = 65, onSaveWorkout }: ActivityProps) {
+export function Activity({ profile, onUpdateProfile }: ActivityProps) {
   const [isReportOpen, setIsReportOpen] = useState(false);
+
+  // Lê o peso ideal do perfil global ou assume 65 por defeito
+  const idealWeight = profile?.idealWeight || 65;
 
   // Estados do Registo de Treino
   const [selectedType, setSelectedType] = useState('Pilates');
@@ -93,6 +97,7 @@ export function Activity({ idealWeight = 65, onSaveWorkout }: ActivityProps) {
   }, []);
 
   // --- GUARDAR TREINO NO BACKEND ---
+  // --- GUARDAR TREINO NO BACKEND ---
   const handleSaveWorkout = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -103,9 +108,15 @@ export function Activity({ idealWeight = 65, onSaveWorkout }: ActivityProps) {
         calories: estimatedKcal,
       });
 
-      if (onSaveWorkout) {
-        onSaveWorkout(estimatedKcal);
+      // Atualiza o perfil global somando o treino ao burnedKcal
+      if (profile && onUpdateProfile) {
+        const currentBurned = profile.burnedKcal || 0;
+        onUpdateProfile({
+          ...profile,
+          burnedKcal: currentBurned + estimatedKcal,
+        });
       }
+
       alert(`Treino de ${selectedType} (${estimatedKcal} kcal) guardado com sucesso!`);
     } catch (error) {
       console.error('Erro ao guardar treino:', error);
@@ -414,8 +425,32 @@ export function Activity({ idealWeight = 65, onSaveWorkout }: ActivityProps) {
           </div>
         </div>
       </div>
-
-      <ActivityReportModal isOpen={isReportOpen} onClose={() => setIsReportOpen(false)} />
+      <ActivityReportModal 
+        isOpen={isReportOpen} 
+        onClose={() => setIsReportOpen(false)} 
+        logs={[
+          ...weightLogs.map((w, index) => ({
+            id: index + 100,
+            kind: 'weight' as const,
+            weight_kg: w.weight,
+            timestamp: new Date().toISOString(),
+          })),
+          ...waistLogs.map((w, index) => ({
+            id: index + 200,
+            kind: 'waist' as const,
+            waist_cm: w.waist,
+            timestamp: new Date().toISOString(),
+          })),
+          {
+            id: 300,
+            kind: 'workout' as const,
+            workout_type: selectedType,
+            minutes: duration,
+            calories_burned: estimatedKcal,
+            timestamp: new Date().toISOString(),
+          }
+        ]} 
+      />
     </div>
   );
 }

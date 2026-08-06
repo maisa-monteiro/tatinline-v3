@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Sparkles, Droplet, Plus, FileText, Trash2, Flame } from 'lucide-react';
 import { ReportModal } from '../components/ReportModal';
-import { api } from '../api'; // <-- Importar a API
+import { type UserProfile } from '../components/OnboardingModal';
+import { api } from '../api';
 import './Journal.css';
 
 interface LogItem {
@@ -14,10 +15,10 @@ interface LogItem {
 }
 
 interface JournalProps {
-  userName?: string;
+  profile?: UserProfile | null;
 }
 
-export function Journal({ userName = 'rg' }: JournalProps) {
+export function Journal({ profile }: JournalProps) {
   const [mealText, setMealText] = useState('');
   const [waterAmount, setWaterAmount] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -27,9 +28,11 @@ export function Journal({ userName = 'rg' }: JournalProps) {
   
   const [logs, setLogs] = useState<LogItem[]>([]);
 
-  const calorieGoal = 1720;
-  const burnedKcal = 0;
-  const waterGoal = 2450;
+  // Metas dinâmicas vindas do perfil (com valores de segurança caso o perfil venha vazio)
+  const userName = profile?.name || 'Utilizador';
+  const calorieGoal = Number(profile?.calories) || 2000;
+  const burnedKcal = profile?.burnedKcal || 0;
+  const waterGoal = Number(profile?.water) || 2500;
 
   const todayDate = new Date().toLocaleDateString('pt-PT', {
     weekday: 'long',
@@ -38,21 +41,22 @@ export function Journal({ userName = 'rg' }: JournalProps) {
   });
 
   const consumedKcal = logs.reduce((acc, item) => acc + (item.calories || 0), 0);
-  const remainingKcal = calorieGoal + burnedKcal - consumedKcal;
+  
+  // O total de calorias que se pode consumir inclui a meta base + o exercício gasto
+  const totalCalorieAllowance = calorieGoal + burnedKcal;
+  const remainingKcal = totalCalorieAllowance - consumedKcal;
 
   // --- ADICIONAR REFEIÇÃO NO BACKEND ---
   const handleAddMeal = async () => {
     if (!mealText.trim()) return;
 
     try {
-      // Mandamos apenas o texto para o backend. O backend é que deve usar a IA para calcular as calorias!
       const response = await api.post('/diary', {
         user_id: 1,
         kind: 'food',
         description: mealText,
       });
 
-      // O backend devolve o objeto criado já com as calorias calculadas pela IA
       const savedItem = response.data;
 
       const newLog: LogItem = {
@@ -142,13 +146,13 @@ export function Journal({ userName = 'rg' }: JournalProps) {
 
         <div className="kcal-main-display">
           <span className="kcal-consumed">{consumedKcal}</span>
-          <span className="kcal-goal">/{calorieGoal} kcal</span>
+          <span className="kcal-goal">/{totalCalorieAllowance} kcal</span>
         </div>
 
         <div className="progress-bar-bg">
           <div 
             className="progress-bar-fill" 
-            style={{ width: `${Math.min(100, (consumedKcal / (calorieGoal + burnedKcal)) * 100)}%` }}
+            style={{ width: `${Math.min(100, (consumedKcal / totalCalorieAllowance) * 100)}%` }}
           />
         </div>
 

@@ -26,20 +26,24 @@ export function HealthReportModal({ isOpen, onClose, logs = [] }: HealthReportMo
 
   if (!isOpen) return null;
 
-  const daysList = ['Hoje', 'Ontem', 'Há 2 dias', 'Há 3 dias'];
-  const monthsList = ['Este Mês', 'Mês Passado'];
-
+  // Listas de exemplo para navegação temporal
+  const daysList = ['Hoje', 'Ontem', 'Há 2 dias', 'Há 3 dias', 'Há 4 dias'];
+  const monthsList = ['Este mês (Atual)', 'Mês Anterior', 'Há 2 meses'];
   const maxIndex = viewMode === 'day' ? daysList.length - 1 : monthsList.length - 1;
 
   const handlePrev = () => {
-    setCurrentDateIndex((prev) => Math.min(prev + 1, maxIndex));
+    if (currentDateIndex < maxIndex) {
+      setCurrentDateIndex(currentDateIndex + 1);
+    }
   };
 
   const handleNext = () => {
-    setCurrentDateIndex((prev) => Math.max(prev - 1, 0));
+    if (currentDateIndex > 0) {
+      setCurrentDateIndex(currentDateIndex - 1);
+    }
   };
 
-  // Cálculo dinâmico dos dados mais recentes
+  // Cálculo dinâmico dos dados mais recentes a partir dos logs reais
   const sleepEntry = logs.find((l) => l.kind === 'sleep');
   const moodEntry = logs.find((l) => l.kind === 'mood');
   const stressEntry = logs.find((l) => l.kind === 'stress');
